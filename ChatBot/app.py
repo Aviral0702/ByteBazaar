@@ -1,38 +1,91 @@
+from sqlalchemy import create_engine
+import requests, logging, json, os
 from flask import Flask, request, jsonify, render_template
-from sentence_transformers import SentenceTransformer
-import numpy as np
+from flask_cors import CORS
 from supabase import create_client, Client
+import google.generativeai as genai
+from dotenv import load_dotenv
+import numpy as np
+from sqlalchemy.sql import select
+from sklearn.metrics.pairwise import cosine_similarity
+from tenacity import retry, stop_after_attempt, wait_fixed
 
 app = Flask(__name__)
+CORS(app)
 
-# Supabase setup
-url = 'https://dlacubasxohtmwnhvwda.supabase.co'
-key = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRsYWN1YmFzeG9odG13bmh2d2RhIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTcxOTIwODk2OCwiZXhwIjoyMDM0Nzg0OTY4fQ.tchDJ5Y8t5fNm6zYuzF0B8p1f_IrhfOQMUUQ_7q2ML0'
-supabase: Client = create_client(url, key)
+load_dotenv()  # Load environment variables
 
-# Load the sentence transformer model
-model = SentenceTransformer('paraphrase-MiniLM-L6-v2')
+DATABASE_URL = os.getenv("DATABASE_URL")
+SUPABASE_URL = os.getenv("SUPABASE_URL")
+SUPABASE_KEY = os.getenv("SUPABASE_KEY")
+API_KEY_GEMINI = os.getenv("API_KEY_GEMINI")
 
-# Function to fetch all relevant columns from Supabase
-def fetch_products():
-    response = supabase.table('Products Info').select('*').execute()
-    if response.data is not None:
-        return response.data
-    else:
-        error_message = response.get("error", "Unknown error occurred")
-        raise Exception(f"Error fetching data: {error_message}")
+# Set up logging
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
-# Function to convert text to embedding
-def text_to_embedding(text):
-    return model.encode([text])[0]
+# Adjust the logging level for the `httpx` library
+logging.getLogger("httpx").setLevel(logging.WARNING)
 
-# Function to find the most similar product
-def find_most_similar_product(user_embedding, product_embeddings, products):
-    similarities = np.dot(product_embeddings, user_embedding) / (np.linalg.norm(product_embeddings, axis=1) * np.linalg.norm(user_embedding))
-    most_similar_index = np.argmax(similarities)
-    most_similar_product = products[most_similar_index]
-    similarity = similarities[most_similar_index]
-    return most_similar_index, similarity, most_similar_product.get("category")
+# Connect to the database
+engine = create_engine(DATABASE_URL)
+supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
+
+# Generating form function
+def generate_form_content(product):
+    form_template = (
+        f"Description: {product['Description']}\n"
+        f"Category: {product['Category']}\n"
+        f"Price: {product['Price']}\n"
+        f"Discounts: {product['Discounts']}\n"
+        f"Features: {product['Features']}\n"
+        f"Provider Name: {product['Provider Name']}\n"
+        f"Average Rating: {product['Average Rating']}\n"
+        f"Availability Status: {product['Availability Status']}\n"
+        f"Product Name: {product['Product Name']}\n"
+    )
+    return form_template
+
+# Updating the form content and the embedding to the table
+def update_form_content_and_embedding(product_id, form_content, embeddings):
+    try:
+        # Update the form_content and embeddings in the database
+        response = supabase.table('Products Database').update({
+            'Form_content': form_content,
+            'Embedding': embeddings  # Assuming you have an 'embeddings' column in your table
+        }).eq('Product ID', product_id).execute()
+        logging.debug(f"Updated form_content and embeddings for product_id {product_id}: {response}")
+    except Exception as e:
+        logging.error(f"Error updating form_content and embeddings for product_id {product_id}: {e}")
+
+# Getting of embedding of the form
+def make_embed_text_fn(model):
+    @retry(stop=stop_after_attempt(3), wait=wait_fixed(2))
+    def embed_fn(text: str) -> list[float]:
+        # Set the task_type to CLASSIFICATION.
+        embedding = genai.embed_content(model=model, content=text, task_type="classification")
+        return embedding['embedding']
+
+    return embed_fn
+
+def get_embeddings(text):
+    genai.configure(api_key=API_KEY_GEMINI)
+    model = 'models/embedding-001'
+    try:
+        embed_fn = make_embed_text_fn(model)
+        embeddings = embed_fn(text)
+        return embeddings
+    except Exception as e:
+        logging.error(f"Error getting embeddings: {e}")
+        return []
+
+# Getting response from the llm
+def get_response_from_llm(input_text):
+    genai.configure(api_key=API_KEY_GEMINI)
+    model = genai.GenerativeModel('gemini-1.5-flash')
+    output = model.generate_content(input_text)
+    response = output.text
+    return response
 
 @app.route('/')
 def home():
@@ -41,41 +94,59 @@ def home():
 @app.route('/chat', methods=['POST'])
 def chat():
     data = request.json
-    if not data or 'query' not in data:
-        return jsonify({"error": "Invalid input"}), 400
+    query = data['query']
+    query_embedding = get_embeddings(query)
 
-    try:
-        products = fetch_products()
-        user_embedding = text_to_embedding(data['query'])
+    # Fetch embeddings from the table
+    response = supabase.table('Products Database').select('Embedding', 'Product ID').execute()
 
-        # Combine all columns into a single text for each product
-        combined_texts = [
-            ' '.join(map(str, [product[col] for col in product if col != 'product_id'])) for product in products
-        ]
+    product_data = response.data
+    product_ids = [row["Product ID"] for row in product_data]
+    embeddings = np.array([row['Embedding'] for row in product_data])
 
-        # Generate embeddings for combined texts
-        product_embeddings = model.encode(combined_texts)
+    # Calculate cosine similarity
+    query_embedding = np.array(query_embedding).reshape(1, -1)
+    similarities = cosine_similarity(query_embedding, embeddings).flatten()
 
-        # Find the most similar product
-        most_similar_index, similarity, category = find_most_similar_product(user_embedding, product_embeddings, products)
+    # Get the top 5 embeddings
+    top_indices = similarities.argsort()[-5:][::-1]
+    top_product_ids = [product_ids[i] for i in top_indices]
 
-        most_similar_product = products[most_similar_index]
+    # Fetch the form content of these products
+    form_content_response = supabase.table('Products Database').select('Form_content').in_('Product ID', top_product_ids).execute()
 
-        # Filter the response to include only the desired fields
-        filtered_product = {
-            "name": most_similar_product.get("name"),
-            "category": category,
-            "price": most_similar_product.get("price"),
-            "description": most_similar_product.get("description"),
-            "discount": most_similar_product.get("discount")
-        }
+    form_contents = form_content_response.data
 
-        # Convert similarity to a native Python float
-        similarity = float(similarity)
+    # Store the top 5 form contents in a variable
+    input_text = (
+    "You are an intelligent chatbot. You will receive a user's query and a relevant context paragraph. "
+    "Your task is to find the top 3 matches for the user query. "
+    "Prompt the user for their query and relevant context. "
+    "Provide precise details including product name, price, and discount for each match. "
+    "Ensure the query includes enough information to find the best matches. "
+    "Structure the output as follows:\n\n"
+    "According to your query, these three products stand out as the finest recommendations:\n"
+    "1. [Product Name]\n"
+    "   [Description]\n"
+    "   - **Price:** [Price]\n"
+    "   - **Discount:** [Discount]\n\n"
+    "2. [Product Name]\n"
+    "   [Description]\n"
+    "   - **Price:** [Price]\n"
+    "   - **Discount:** [Discount]\n\n"
+    "3. [Product Name]\n"
+    "   [Description]\n"
+    "   - **Price:** [Price]\n"
+    "   - **Discount:** [Discount]\n\n"
+    f"Query: {query}\n\n"
+    "Context: "
+    "\n".join([row['Form_content'] for row in form_contents])
+)
+    logging.debug(f"final input text is {input_text}")
+    answer = get_response_from_llm(input_text)
+    logging.debug(f"final answer is: {answer}")
+    return jsonify(answer)
 
-        return jsonify({"most_similar_product": filtered_product, "similarity": similarity})
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+if __name__ == "__main__":
+    app.run(debug=True)
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
