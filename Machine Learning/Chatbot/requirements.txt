@@ -1,0 +1,11 @@
+requests
+flask
+flask-cors
+supabase==2.5.1
+sqlalchemy
+google-generativeai
+python-dotenv
+numpy
+scikit-learn
+tenacity
+psycopg2-binary
