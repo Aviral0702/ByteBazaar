@@ -89,8 +89,7 @@ def get_response_from_llm(input_text):
 
 @app.route('/')
 def home():
-    return render_template('index.html')
-
+    return "Home"
 @app.route('/chat', methods=['POST'])
 def chat():
     data = request.json
@@ -128,16 +127,16 @@ def chat():
     "According to your query, these three products stand out as the finest recommendations:\n"
     "1. [Product Name]\n"
     "   [Description]\n"
-    "   - **Price:** [Price]\n"
-    "   - **Discount:** [Discount]\n\n"
+    "   - Price: [Price]\n"
+    "   - Discount: [Discount]\n\n"
     "2. [Product Name]\n"
     "   [Description]\n"
-    "   - **Price:** [Price]\n"
-    "   - **Discount:** [Discount]\n\n"
+    "   - Price: [Price]\n"
+    "   - Discount: [Discount]\n\n"
     "3. [Product Name]\n"
     "   [Description]\n"
-    "   - **Price:** [Price]\n"
-    "   - **Discount:** [Discount]\n\n"
+    "   - Price: [Price]\n"
+    "   - Discount: [Discount]\n\n"
     f"Query: {query}\n\n"
     "Context: "
     "\n".join([row['Form_content'] for row in form_contents])
