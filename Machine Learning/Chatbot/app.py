@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine
-import requests, logging, json, os
-from flask import Flask, request, jsonify, render_template
+import logging, os
+from flask import Flask, request, jsonify
 from flask_cors import CORS
 from supabase import create_client, Client
 import google.generativeai as genai
@@ -87,9 +87,6 @@ def get_response_from_llm(input_text):
     response = output.text
     return response
 
-@app.route('/')
-def home():
-    return "Home"
 @app.route('/chat', methods=['POST'])
 def chat():
     data = request.json
