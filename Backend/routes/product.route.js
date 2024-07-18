@@ -6,7 +6,7 @@ import {
     getProduct,
     getProducts,
 } from '../controllers/product.controller.js';
-import { verifyToken } from '../utils/verifyUser.js';
+import { verifyToken } from '../Middleware/auth.middleware.js';
 
 const router = express.Router();
 
