@@ -1,150 +1,85 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { motion } from 'framer-motion';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 
-function About() {
-  const [isExpanded, setIsExpanded] = useState(false);
-
-  const toggleExpansion = () => {
-    setIsExpanded(!isExpanded);
-  };
-
+const About = () => {
   return (
-    <div className="bg-white min-h-screen"> {/* Changed the main background to white */}
-      <Navbar />
-      <main className="container mx-auto px-4 py-24"> {/* Increased py-24 for more spacing */}
-        <div className="text-center mb-12"> {/* Added mb-12 for more spacing */}
-          <h1 className="text-blue-500 font-bold text-5xl mb-4"> {/* Changed text color to blue */}
-            NACHONACHO
-          </h1>
-          <p className="text-gray-700 text-lg mb-8"> {/* Changed text color to gray */}
-            NachoNacho is the world's largest marketplace for SaaS and professional
-            services. Our mission is to harmonize the subscription and services
-            economies and foster their further growth. We use the latest fintech and AI
-            tools to create powerful user experiences for all stakeholders in the
-            marketplace.
+    <>
+      <div className="pt-16 md:pt-20"> {/* Adjust padding top for Navbar */}
+        <Navbar />
+      </div>
+      <div className="container mx-auto p-4 md:p-8">
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1 }}
+          className="text-center"
+        >
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 mt-8 md:mt-12">Welcome to ByteBazaar</h1> {/* Adjust margin top */}
+          <p className="text-lg md:text-xl mb-4">
+            At ByteBazaar, we're on a mission to revolutionize how businesses access and utilize software solutions. Our innovative marketplace is meticulously designed to offer the best SaaS products available, ensuring companies have the resources they need to streamline operations, enhance productivity, and drive success. We believe in empowering businesses of all sizes with cutting-edge tools and technologies that facilitate growth and efficiency. By providing a diverse range of top-tier software solutions, we help companies achieve their goals, overcome challenges, and thrive in today's highly competitive landscape. At ByteBazaar, we are committed to being your trusted partner in business success.
           </p>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <div>
-            <p className="text-lg leading-relaxed mb-4">
-              Both NachoNacho founders have had extensive careers in large
-              corporations as well as startups. The subscription economy has
-              infiltrated almost all aspects of our professional (and personal) lives.
-              Its effects are generally extremely positive for buyers and sellers of
-              subscription products. However, we gathered our collective
-              experiences and found various issues in the subscription as well as
-              the B2B services economy.
+          
+          <h2 className="text-3xl md:text-4xl font-bold mt-8 mb-4">Our Story</h2>
+          <div className="bg-blue-100 p-4 rounded shadow mb-4">
+            <p className="text-lg md:text-xl">
+              Our journey began with a shared passion for coding and technology. As a group of enthusiastic developers, we spent countless hours honing our skills and exploring the latest advancements. Our path took a transformative turn when we participated in a hackathon hosted by EthAum Venture Partners. It was there that we identified a significant gap in the market: the need for a streamlined, comprehensive SaaS marketplace that could simplify the software procurement process for businesses.
             </p>
-            <p className="text-lg leading-relaxed mb-4">
-              As buyers of subscriptions and services, we saw:
+          </div>
+          <div className="bg-green-100 p-4 rounded shadow mb-4">
+            <p className="text-lg md:text-xl">
+              Inspired by this opportunity, we decided to leverage our technical expertise and entrepreneurial spirit to build ByteBazaar. Our vision was to create a platform that not only offers the best SaaS products but also empowers businesses to enhance productivity, streamline operations, and achieve their goals effortlessly. Fueled by our commitment to innovation and excellence, we embarked on this exciting journey to revolutionize the way businesses access and utilize software solutions.
             </p>
-            <ul className="list-disc ml-6">
-              <li className="mb-2">
-                How our companies would waste a lot of money due to the
-                subscription sprawl and poor vendor selection.
-              </li>
-              <li className="mb-2">
-                How difficult it was to figure out who had which subscription in the
-                company.
-              </li>
-              <li>
-                Companies weren't always sure of the best product to subscribe to for
-                a specific need.
-              </li>
+          </div>
+
+          <h2 className="text-3xl md:text-4xl font-bold mt-8 mb-4">What We Offer?</h2>
+          <div className="bg-yellow-100 p-4 rounded shadow mb-4">
+            <p className="text-lg md:text-xl">
+              At ByteBazaar, we bridge the gap between businesses and premier SaaS solutions, making it effortless for vendors to connect with their audience. We offer:
+            </p>
+            <ul className="list-disc list-inside">
+              <li>Discover and Compare: Effortlessly locate and evaluate SaaS products with an array of filters.</li>
+              <li>Subscription Management: Streamline the purchase and organization of all your software subscriptions in one place.</li>
+              <li>Vendor Oversight: Monitor vendors, manage renewals and expirations, and communicate directly with vendors.</li>
+              <li>Intelligent Insights: Leverage our advanced marketplace powered by an LLM to ask questions and gain valuable insights.</li>
             </ul>
           </div>
-          <div>
-            <p className="text-lg leading-relaxed mb-4">
-              On the seller side, we saw massive competition in every subscription
-              and service category, dramatically increasing user acquisition costs.
-            </p>
-            <p className="text-lg leading-relaxed mb-4">
-              And then it came to us - we need to harmonize the subscription and
-              services economy by creating a central hub for buyers and sellers.
-              It's what companies like Amazon, eBay, and Etsy built for physical
-              products and Upwork built for talent. It's about time we built a
-              marketplace for subscriptions and services that works for all
-              stakeholders!
-            </p>
-            <button
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-              onClick={toggleExpansion}
-            >
-              {isExpanded ? 'Collapse' : 'What We Do'}
-            </button>
-            {isExpanded && (
-              <div className="mt-4">
-                <p className="text-lg leading-relaxed mb-4">
-                  We built a marketplace that is designed to address the
-                  challenges that we saw in the subscription economy. Here are some
-                  of the key features:
-                </p>
-                <ul className="list-disc ml-6">
-                  <li className="mb-2">
-                    Easy to use platform that allows users to find and compare
-                    subscriptions.
-                  </li>
-                  <li className="mb-2">
-                    A wide range of subscriptions to choose from, including both
-                    B2C and B2B offerings.
-                  </li>
-                  <li>
-                    Secure and reliable payment processing to ensure that user
-                    transactions are safe.
-                  </li>
-                </ul>
-                <p className="text-lg leading-relaxed mb-4">
-                  We believe that NachoNacho is the future of the subscription
-                  economy. We are committed to providing our users with the best
-                  possible experience, and we are constantly working to improve our
-                  platform.
-                </p>
-              </div>
-            )}
-          </div>
-        </div>
 
-        {/* Additional sections like Virtual Credit Cards, Subscriptions, Transactions */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mt-12"> {/* Increased gap-12 for more spacing */}
-          <div className="bg-white p-8 rounded-lg shadow-md mb-8">
-            <div className="flex items-center space-x-4 mb-4">
-              <div className="w-10 h-10 bg-gray-300 rounded-full"></div>
-              <h2 className="font-bold text-xl">Virtual Credit Cards</h2>
+          <h2 className="text-3xl md:text-4xl font-bold mt-8 mb-4">Meet CodeCrew</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="bg-purple-100 p-4 rounded shadow">
+              <h3 className="text-2xl md:text-3xl font-bold">Himanshu Singh</h3>
+              <p className="text-lg">Product Manager</p>
+              <p>Himanshu is enthusiastic about product management, striving to meet user needs and deliver exceptional value at ByteBazaar.</p>
             </div>
-            <p className="text-gray-700">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-              tincidunt, odio eget ultrices lacinia, dolor lectus maximus justo,
-              a blandit lacus mauris sed erat.
-            </p>
-          </div>
-          <div className="bg-white p-8 rounded-lg shadow-md mb-8">
-            <div className="flex items-center space-x-4 mb-4">
-              <div className="w-10 h-10 bg-gray-300 rounded-full"></div>
-              <h2 className="font-bold text-xl">Subscriptions</h2>
+            <div className="bg-red-100 p-4 rounded shadow">
+              <h3 className="text-2xl md:text-3xl font-bold">Armaan Pant</h3>
+              <p className="text-lg">Frontend Developer</p>
+              <p>Armaan is our frontend wizard, crafting intuitive and user-friendly interfaces that make navigating ByteBazaar a seamless experience.</p>
             </div>
-            <p className="text-gray-700">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-              tincidunt, odio eget ultrices lacinia, dolor lectus maximus justo,
-              a blandit lacus mauris sed erat.
-            </p>
-          </div>
-          <div className="bg-white p-8 rounded-lg shadow-md mb-8">
-            <div className="flex items-center space-x-4 mb-4">
-              <div className="w-10 h-10 bg-gray-300 rounded-full"></div>
-              <h2 className="font-bold text-xl">Transactions</h2>
+            <div className="bg-indigo-100 p-4 rounded shadow">
+              <h3 className="text-2xl md:text-3xl font-bold">Aviral Asthana</h3>
+              <p className="text-lg">Backend Developer</p>
+              <p>Aviral is the backbone of our platform, responsible for developing robust backend systems that keep ByteBazaar running smoothly and efficiently.</p>
             </div>
-            <p className="text-gray-700">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-              tincidunt, odio eget ultrices lacinia, dolor lectus maximus justo,
-              a blandit lacus mauris sed erat.
-            </p>
+            <div className="bg-teal-100 p-4 rounded shadow">
+              <h3 className="text-2xl md:text-3xl font-bold">Mukund Agarwallla</h3>
+              <p className="text-lg">Machine Learning Developer</p>
+              <p>Mukund leverages the power of machine learning to enhance our platform's capabilities, ensuring our SaaS solutions are smart, efficient, and ahead of the curve.</p>
+            </div>
           </div>
-        </div>
 
-      </main>
-      <Footer className="mt-12" /> {/* Added mt-12 for more spacing */}
-    </div>
+          <h2 className="text-3xl md:text-4xl font-bold mt-8 mb-4">Get in Touch</h2>
+          <div className="bg-gray-100 p-4 rounded shadow">
+            <p className="text-lg md:text-xl">
+              We'd love to hear from you! If you have any questions or need support, feel free to reach out to us at <a href="mailto:contact@bytebazaar.com" className="text-blue-500">contact@bytebazaar.com</a> or call us at +1234567890. Follow us on social media to stay updated on the latest news and developments.
+            </p>
+          </div>
+        </motion.div>
+      </div>
+      <Footer />
+    </>
   );
 }
 

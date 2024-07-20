@@ -165,66 +165,67 @@ const Cart = () => {
     }
 
     return (
-        <div className="flex h-screen">
-            <SideBar />
-            <div className="flex-1 container mx-auto p-8 overflow-y-auto h-full">
-                <h1 className="text-3xl font-bold mb-6 text-gray-900">My Cart</h1>
-                {purchaseMessage && (
-                    <div className="bg-green-200 text-green-800 p-2 mb-4 rounded-lg">{purchaseMessage}</div>
-                )}
-                <div className="mt-4 text-right">
-                    <h2 className="text-2xl font-bold text-gray-900">Total: ${totalAmount}</h2>
-                    <button
-                        onClick={handleBuyCart}
-                        className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition duration-300 ml-4"
-                    >
-                        Buy Cart
-                    </button>
-                </div>
-                <ul className="divide-y-4 divide-gray-300 bg-gray-100 mt-6 p-4 rounded-lg shadow-lg">
-                    {cartItems.map(item => (
-                        <li key={item.listingId} className="py-4 flex items-center rounded-lg border-2 border-gray-300 mb-4 p-4">
-                            <Link to={`/listing/${item.listingId}`} className="flex items-center flex-1">
-                                <div className="flex-shrink-0">
-                                    <img className="h-16 w-16 rounded-lg object-cover" src={item.imageUrls} alt={item.name} />
-                                </div>
-                                <div className="ml-4 flex-1">
-                                    <h2 className="text-lg font-semibold text-gray-900">{item.name}</h2>
-                                    <p className="text-gray-700">${item.discountPrice}</p>
-                                </div>
-                            </Link>
-                            <div className="flex items-center space-x-2">
-                                <button
-                                    onClick={() => handleRemoveFromCart(item)}
-                                    className="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-600 transition duration-300 flex items-center justify-center"
-                                >
-                                    -
-                                </button>
-                                <span className="text-gray-900 mx-2">{item.quantity}</span>
-                                <button
-                                    onClick={() => handleAddToCart(item)}
-                                    className="bg-green-500 text-white px-3 py-1 rounded-lg hover:bg-green-600 transition duration-300 flex items-center justify-center"
-                                >
-                                    +
-                                </button>
-                                <button
-                                    onClick={() => handleDeleteItem(item.listingId)}
-                                    className="bg-red-700 text-white px-3 py-1 rounded-lg hover:bg-red-800 transition duration-300 flex items-center justify-center"
-                                >
-                                    <FaTrash />
-                                </button>
-                                <button
-                                    onClick={() => handleBuyNow(item)}
-                                    className="bg-blue-500 text-white px-3 py-1 rounded-lg hover:bg-blue-600 transition duration-300 flex items-center justify-center"
-                                >
-                                    Buy Now
-                                </button>
-                            </div>
-                        </li>
-                    ))}
-                </ul>
-            </div>
+        <div className="flex flex-col lg:flex-row h-screen">
+    <SideBar />
+    <div className="flex-1 container mx-auto p-4 md:p-8 overflow-y-auto h-full">
+        <h1 className="text-2xl md:text-3xl font-bold mb-4 md:mb-6 text-gray-900">My Cart</h1>
+        {purchaseMessage && (
+            <div className="bg-green-200 text-green-800 p-2 mb-4 rounded-lg">{purchaseMessage}</div>
+        )}
+        <div className="mt-4 text-right">
+            <h2 className="text-xl md:text-2xl font-bold text-gray-900">Total: ${totalAmount}</h2>
+            <button
+                onClick={handleBuyCart}
+                className="bg-blue-500 text-white px-3 py-2 rounded-lg hover:bg-blue-600 transition duration-300 ml-4"
+            >
+                Buy Cart
+            </button>
         </div>
+        <ul className="divide-y divide-gray-300 bg-gray-100 mt-6 p-4 rounded-lg shadow-lg">
+            {cartItems.map(item => (
+                <li key={item.listingId} className="py-4 flex flex-col md:flex-row items-center rounded-lg border-2 border-gray-300 mb-4 p-4">
+                    <Link to={`/listing/${item.listingId}`} className="flex items-center flex-1 mb-4 md:mb-0 md:mr-4">
+                        <div className="flex-shrink-0">
+                            <img className="h-16 w-16 rounded-lg object-cover" src={item.imageUrls} alt={item.name} />
+                        </div>
+                        <div className="ml-4 flex-1">
+                            <h2 className="text-lg font-semibold text-gray-900">{item.name}</h2>
+                            <p className="text-gray-700">${item.discountPrice}</p>
+                        </div>
+                    </Link>
+                    <div className="flex items-center space-x-2">
+                        <button
+                            onClick={() => handleRemoveFromCart(item)}
+                            className="bg-red-500 text-white px-3 py-1 rounded-lg hover:bg-red-600 transition duration-300 flex items-center justify-center"
+                        >
+                            -
+                        </button>
+                        <span className="text-gray-900 mx-2">{item.quantity}</span>
+                        <button
+                            onClick={() => handleAddToCart(item)}
+                            className="bg-green-500 text-white px-3 py-1 rounded-lg hover:bg-green-600 transition duration-300 flex items-center justify-center"
+                        >
+                            +
+                        </button>
+                        <button
+                            onClick={() => handleDeleteItem(item.listingId)}
+                            className="bg-red-700 text-white px-3 py-1 rounded-lg hover:bg-red-800 transition duration-300 flex items-center justify-center"
+                        >
+                            <FaTrash />
+                        </button>
+                        <button
+                            onClick={() => handleBuyNow(item)}
+                            className="bg-blue-500 text-white px-3 py-1 rounded-lg hover:bg-blue-600 transition duration-300 flex items-center justify-center"
+                        >
+                            Buy Now
+                        </button>
+                    </div>
+                </li>
+            ))}
+        </ul>
+    </div>
+</div>
+
     );
 };
 

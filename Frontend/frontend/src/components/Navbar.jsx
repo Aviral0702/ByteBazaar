@@ -20,7 +20,7 @@ const Navbar = () => {
         return;
       }
       dispatch(deleteUserSuccess(data));
-      navigate('/landingpage');
+      navigate('/sign-in');
     } catch (error) {
       console.error('Error signing out:', error);
       dispatch(deleteUserFailure(error.message));
@@ -61,24 +61,22 @@ const Navbar = () => {
   }, []);
 
   return (
-    <>
-      <div className="navbar bg-base-100 fixed top-0 left-0 w-full shadow-md">
-        <div className="flex-1 flex items-center justify-between">
-          <Link to="/landingpage" className="btn btn-ghost text-2xl font-bold">ByteBazaar</Link>
-          <div className="flex space-x-4">
-            <Link to="/about">
-              <button className="btn btn-outline btn-primary">About Us</button>
-            </Link>
-            <Link to="/pricing">
-              <button className="btn btn-outline btn-primary">Pricing</button>
-            </Link>
-            <Link to="/sign-in">
-              <button className="btn btn-outline btn-secondary">Login</button>
-            </Link>
-            <Link to="/getstarted">
-              <button className="btn btn-outline btn-secondary">Get Started</button>
-            </Link>
-          </div>
+    <div className="navbar bg-base-100 fixed top-0 left-0 w-full shadow-md z-50">
+      <div className="container mx-auto flex items-center justify-between px-4 py-2">
+        <Link to="/landingpage" className="text-2xl font-bold">ByteBazaar</Link>
+        <div className="hidden md:flex space-x-4">
+          <Link to="/about">
+            <button className="btn btn-outline btn-primary">About Us</button>
+          </Link>
+          <Link to="/pricing">
+            <button className="btn btn-outline btn-primary">Pricing</button>
+          </Link>
+          <Link to="/sign-in">
+            <button className="btn btn-outline btn-secondary">Login</button>
+          </Link>
+          <Link to="/getstarted">
+            <button className="btn btn-outline btn-secondary">Get Started</button>
+          </Link>
         </div>
         <div className="flex items-center space-x-4">
           <div className="dropdown dropdown-end">
@@ -135,8 +133,39 @@ const Navbar = () => {
             </ul>
           </div>
         </div>
+        <div className="md:hidden flex items-center">
+          <div className="dropdown dropdown-end">
+            <div tabIndex={0} className="btn btn-ghost btn-circle">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7" />
+              </svg>
+            </div>
+            <ul tabIndex={0} className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52">
+              <li>
+                <Link to="/about">
+                  About Us
+                </Link>
+              </li>
+              <li>
+                <Link to="/pricing">
+                  Pricing
+                </Link>
+              </li>
+              <li>
+                <Link to="/sign-in">
+                  Login
+                </Link>
+              </li>
+              <li>
+                <Link to="/getstarted">
+                  Get Started
+                </Link>
+              </li>
+            </ul>
+          </div>
+        </div>
       </div>
-    </>
+    </div>
   );
 };
 

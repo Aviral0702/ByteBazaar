@@ -39,25 +39,29 @@ export const MarketPlaceProducts = () => {
     }, [selectedCategory]); // Re-fetch on category change
 
     return (
-        <div>
-            <div>
-                MarketPlace products
-            </div>
-            {loading ? (
-                <p>Loading products...</p>
-            ) : error ? (
-                <p>Error: {error}</p>
-            ) : (
-                <ul>
-                    {products.map((product) => (
-                        <div key={product.id}>
-                            <h2>{product.name}</h2>
-                            <p>{product.description}</p>
-                            <img src={product.imageUrl} alt={product.name} />
-                        </div>
-                    ))}
-                </ul>
-            )}
+        <div className="p-5">
+        <div className="text-2xl font-bold mb-4">
+          MarketPlace Products
         </div>
+        {loading ? (
+          <p className="text-center">Loading products...</p>
+        ) : error ? (
+          <p className="text-center text-red-500">Error: {error}</p>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {products.map((product) => (
+              <div key={product.id} className="bg-white p-4 rounded-lg shadow-lg">
+                <h2 className="text-xl font-semibold mb-2">{product.name}</h2>
+                <p className="text-gray-700 mb-4">{product.description}</p>
+                <img
+                  src={product.imageUrl}
+                  alt={product.name}
+                  className="w-full h-48 object-cover rounded-lg"
+                />
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     );
 };

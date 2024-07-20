@@ -11,6 +11,7 @@ const Dashboard = () => {
   const [userAvatar, setUserAvatar] = useState('');
   const [purchasedProducts, setPurchasedProducts] = useState([]);
   const [cartProducts, setCartProducts] = useState([]);
+  const[seller,setSeller]=useState(false)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -26,6 +27,7 @@ const Dashboard = () => {
         const userData = await userResponse.json();
         setUserName(userData.username);
         setUserAvatar(userData.avatar);
+        setSeller(userData.isSeller);
 
         // Fetch purchased products
         const purchasedResponse = await fetch(`/api/cart/getPurchasedProducts/${userId}`);
@@ -45,15 +47,15 @@ const Dashboard = () => {
   }, []);
 
   return (
-    <div className="flex">
+    <div className="flex flex-col lg:flex-row">
       <Sidebar />
-      <div className="ml-20 mr-8 p-8 w-full"> {/* Adjusted ml-20 and added mr-8 for left margin and right margin */}
-        <div className="flex items-center justify-between mb-8">
-          <div className="flex items-center">
+      <div className="lg:ml-20 lg:mr-8 p-8 w-full">
+        <div className="flex flex-col sm:flex-row items-center justify-between mb-8">
+          <div className="flex items-center mb-4 sm:mb-0">
             <img src={userAvatar} alt="User Avatar" className="h-12 w-12 rounded-full object-cover mr-4" />
             <div>
               <h1 className="text-3xl font-bold">{userName}</h1>
-              <p className="text-gray-600">Welcome to your dashboard!</p>
+              <p className="text-gray-600">Welcome to your {seller ? 'Seller' : 'Buyer'} dashboard!</p>
             </div>
           </div>
           <Link to="/profile">
@@ -62,19 +64,18 @@ const Dashboard = () => {
         </div>
 
         {/* Section: Graphs */}
-        <div className="mb-12">
+        <div >
           <Graphs />
         </div>
 
         {/* Horizontal dotted line */}
         <hr className="border-t-2 border-black my-8 mx-2" />
 
-        
         {/* Section: Purchased Products */}
         <section className="mb-12">
           <h2 className="text-2xl font-semibold mb-4">Your Purchased Products</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {purchasedProducts.map(product => (
+            {purchasedProducts.map((product) => (
               <motion.div
                 key={product._id}
                 className="bg-white rounded-lg shadow-md p-4"
@@ -97,12 +98,11 @@ const Dashboard = () => {
         {/* Horizontal dotted line */}
         <hr className="border-t-2 border-black my-8 mx-2" />
 
-
         {/* Section: Cart Products */}
         <section>
           <h2 className="text-2xl font-semibold mb-4">Your Cart</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {cartProducts.map(product => (
+            {cartProducts.map((product) => (
               <motion.div
                 key={product._id}
                 className="bg-white rounded-lg shadow-md p-4"

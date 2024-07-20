@@ -1,115 +1,98 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import SideBar from '../components/SideBar'; // Import the Sidebar component
 
-const SettingsPage = () => {
+const Settings = () => {
+  const [formData, setFormData] = useState({
+    username: '',
+    email: '',
+    password: '',
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Handle form submission here
+    console.log('Form Data Submitted:', formData);
+  };
+
   return (
-    <div className="flex h-screen">
-      <SideBar />
-      <motion.main
-        initial={{ opacity: 0, x: -100 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ duration: 0.5 }}
-        className="flex-grow p-8 bg-gray-100"
-      >
-        <div className="max-w-4xl mx-auto bg-white shadow-md rounded-lg overflow-hidden">
-          <div className="px-6 py-4">
-            <div className="flex items-center justify-between">
-              <h2 className="text-3xl font-semibold text-gray-800">Settings</h2>
+    <div className="flex">
+      <aside className="w-64 bg-gray-800 text-white h-screen p-4">
+        <h2 className="text-lg font-semibold mb-4">Settings</h2>
+        <ul>
+          <li className="mb-2">
+            <a href="/settings/profile" className="hover:underline">Profile</a>
+          </li>
+          <li className="mb-2">
+            <a href="/settings/security" className="hover:underline">Security</a>
+          </li>
+          <li className="mb-2">
+            <a href="/settings/notifications" className="hover:underline">Notifications</a>
+          </li>
+          <li>
+            <a href="/settings/preferences" className="hover:underline">Preferences</a>
+          </li>
+        </ul>
+      </aside>
+      <main className="flex-1 p-6 bg-gray-100">
+        <motion.div
+          className="max-w-4xl mx-auto bg-white p-6 rounded-lg shadow-md"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5 }}
+        >
+          <h1 className="text-2xl font-bold mb-6">Profile Settings</h1>
+          <form onSubmit={handleSubmit}>
+            <div className="mb-4">
+              <label htmlFor="username" className="block text-sm font-medium text-gray-700">Username</label>
+              <input
+                type="text"
+                id="username"
+                name="username"
+                value={formData.username}
+                onChange={handleChange}
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              />
             </div>
-            <div className="mt-4">
-              <ul className="flex border-b">
-                <li className="mr-1">
-                  <a className="bg-white inline-block py-2 px-4 text-blue-700 font-semibold" href="#">Company</a>
-                </li>
-                <li className="mr-1">
-                  <a className="inline-block py-2 px-4 text-gray-500 hover:text-blue-700" href="#">Personal</a>
-                </li>
-                <li className="mr-1">
-                  <a className="inline-block py-2 px-4 text-gray-500 hover:text-blue-700" href="#">Integrations</a>
-                </li>
-                <li className="mr-1">
-                  <a className="inline-block py-2 px-4 text-gray-500 hover:text-blue-700" href="#">Create New Account</a>
-                </li>
-                <li className="mr-1">
-                  <a className="inline-block py-2 px-4 text-gray-500 hover:text-blue-700" href="#">Invitations</a>
-                </li>
-              </ul>
+            <div className="mb-4">
+              <label htmlFor="email" className="block text-sm font-medium text-gray-700">Email</label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              />
             </div>
-            <div className="mt-6">
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ duration: 0.5 }}
+            <div className="mb-4">
+              <label htmlFor="password" className="block text-sm font-medium text-gray-700">Password</label>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              />
+            </div>
+            <div className="flex justify-end">
+              <button
+                type="submit"
+                className="bg-indigo-600 text-white px-4 py-2 rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
               >
-                <div className="border-b pb-4">
-                  <h3 className="text-xl font-semibold mb-2 text-gray-800">Company Settings</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-gray-700 text-lg">Account Type</label>
-                      <input
-                        className="mt-1 block w-full rounded-md border-gray-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-lg"
-                        type="text"
-                        defaultValue="Company/Group Account"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-gray-700 text-lg">Company Name</label>
-                      <input
-                        className="mt-1 block w-full rounded-md border-gray-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-lg"
-                        type="text"
-                        defaultValue="Google"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-gray-700 text-lg">Legal Business Name</label>
-                      <input
-                        className="mt-1 block w-full rounded-md border-gray-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-lg"
-                        type="text"
-                        defaultValue=""
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-gray-700 text-lg">Website</label>
-                      <input
-                        className="mt-1 block w-full rounded-md border-gray-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-lg"
-                        type="text"
-                        defaultValue=""
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-gray-700 text-lg">EIN Number</label>
-                      <input
-                        className="mt-1 block w-full rounded-md border-gray-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-lg"
-                        type="text"
-                        defaultValue=""
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-gray-700 text-lg">Business Address</label>
-                      <input
-                        className="mt-1 block w-full rounded-md border-gray-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-lg"
-                        type="text"
-                        defaultValue=""
-                      />
-                    </div>
-                    <div className="col-span-2">
-                      <label className="block text-gray-700 text-lg">Description</label>
-                      <textarea
-                        className="mt-1 block w-full rounded-md border-gray-600 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 text-lg"
-                        rows="4"
-                        defaultValue=""
-                      />
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
+                Save Changes
+              </button>
             </div>
-          </div>
-        </div>
-      </motion.main>
+          </form>
+        </motion.div>
+      </main>
     </div>
   );
 };
 
-export default SettingsPage;
+export default Settings;

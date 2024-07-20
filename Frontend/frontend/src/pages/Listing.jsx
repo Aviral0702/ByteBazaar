@@ -233,7 +233,7 @@ const Listing = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [listing, setListing] = useState(null);
-  const [quantity, setQuantity] = useState(1);
+  const [quantity, setQuantity] = useState(0);
   const [userId, setUserId] = useState(null); // State to hold userId
   const params = useParams();
 
@@ -300,7 +300,7 @@ const Listing = () => {
       console.log(data)
       if (data.message==="added to cart") {
         toast.success('Added to cart');
-        setQuantity(quantity+1);
+        setQuantity(quantity===1);
       } else {
         toast.error('Failed to add to cart');
       }
@@ -370,21 +370,21 @@ const Listing = () => {
   return (
     <>
       <ToastContainer position="top-right" autoClose={3000} hideProgressBar={false} />
-      <div className="min-h-screen flex flex-col mt-12 py-15">
+      <div className="min-h-screen flex flex-col mt-12 py-8 md:py-15">
         <Navbar />
         <div className="flex-grow flex items-center justify-center">
           <div className="bg-white rounded-lg shadow-lg p-8 w-full max-w-5xl">
             {listing && (
               <div>
-                <div className="flex items-center justify-center">
+                <div className="flex items-center justify-center flex-wrap md:flex-nowrap">
                   <img
                     src={listing.imageUrls}
                     alt="Product"
-                    className="w-48 h-48 mr-4 rounded-full"
+                    className="w-48 h-48 mr-4 rounded-full mb-4 md:mb-0"
                   />
-                  <div>
-                    <div className="flex items-center">
-                      <h1 className="text-4xl font-bold truncate max-w-lg">{listing.name}</h1>
+                  <div className="flex flex-col justify-center">
+                    <div className="flex items-center mb-2">
+                      <h1 className="text-2xl md:text-4xl font-bold truncate max-w-lg">{listing.name}</h1>
                       <button
                         onClick={addToCart}
                         className="ml-4 bg-green-600 text-white px-3 py-1 rounded-full text-lg font-semibold hover:bg-green-700"
@@ -403,25 +403,27 @@ const Listing = () => {
                         </div>
                       )}
                     </div>
-                    <div className="flex items-center mt-2">
-                      <span className="bg-yellow-300 text-yellow-800 text-lg font-semibold mr-2 px-3 py-1 rounded-full">
+                    <div className="flex items-center mt-2 space-x-2 flex-wrap">
+                      <span className="bg-yellow-300 text-yellow-800 text-lg font-semibold px-3 py-1 rounded-full">
                         {listing.cashbackOffer}
                       </span>
                       <span className="bg-purple-600 text-white text-lg font-semibold px-3 py-1 rounded-full flex items-center">
                         💎 Premium
                       </span>
                       <button 
-                      onClick={buyProduct}>
+                        onClick={buyProduct}
+                        className="mt-2 md:mt-0 bg-blue-600 text-white px-4 py-2 rounded-full text-lg font-semibold hover:bg-blue-700"
+                      >
                         Buy Now
                       </button>
                     </div>
                     <p className="text-green-700 mt-2 text-lg">
                       Save up to {listing.savings}
                     </p>
-                    <p className="text-gray-700 mt-4 text-lg">
+                    <p className="text-gray-700 mt-4 text-lg max-w-full overflow-hidden overflow-ellipsis">
                       {listing.description}
                     </p>
-                    <div className="flex items-center mt-4">
+                    <div className="flex items-center mt-4 space-x-2 flex-wrap">
                       <a
                         href={listing.website}
                         className="text-blue-600 hover:underline text-lg"
@@ -432,7 +434,7 @@ const Listing = () => {
                         Share
                       </button>
                     </div>
-                    <div className="flex items-center mt-4 space-x-3">
+                    <div className="flex items-center mt-4 space-x-2 flex-wrap">
                       {listing.tags.map((tag, index) => (
                         <span
                           key={index}
@@ -460,7 +462,7 @@ const Listing = () => {
                   <h2 className="text-2xl font-bold">
                     What is {listing.name}?
                   </h2>
-                  <p className="text-base text-gray-700 mt-2">
+                  <p className="text-base text-gray-700 mt-2 max-w-full overflow-hidden overflow-ellipsis">
                     {listing.description}
                   </p>
                   <ul className="list-disc list-inside mt-2 text-gray-700 text-base">
@@ -510,11 +512,11 @@ const Listing = () => {
                   <h2 className="text-2xl font-bold">
                     Service providers who can help you with this product
                   </h2>
-                  <div className="flex justify-between mt-6">
+                  <div className="flex flex-wrap justify-between mt-6">
                     {listing.serviceProviders.map((provider, index) => (
                       <div
                         key={index}
-                        className="bg-blue-50 rounded-lg p-4 w-1/2 mr-2"
+                        className="bg-blue-50 rounded-lg p-4 w-full md:w-1/2 mb-4 md:mb-0"
                       >
                         <div className="flex items-center mb-2">
                           <img
@@ -522,7 +524,7 @@ const Listing = () => {
                             alt={provider.name}
                             className="w-12 h-12 rounded-full"
                           />
-                          <h3 className="text-xl font-bold ml-4">
+                          <h3 className="text-lg md:text-xl font-bold ml-4 truncate max-w-xs">
                             {provider.name}
                           </h3>
                         </div>
@@ -536,7 +538,7 @@ const Listing = () => {
                             </span>
                           ))}
                         </div>
-                        <p className="text-gray-700 mb-2">
+                        <p className="text-gray-700 mb-2 max-w-full overflow-hidden overflow-ellipsis">
                           {provider.description}
                         </p>
                         <a
