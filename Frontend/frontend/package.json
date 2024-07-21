@@ -18,7 +18,7 @@
     "@reduxjs/toolkit": "^2.2.5",
     "chart.js": "^4.4.3",
     "dubsui": "^0.2.1-b",
-    "firebase": "^10.12.3",
+    "firebase": "^10.12.4",
     "framer-motion": "^11.2.12",
     "gsap": "^3.12.5",
     "lucide-react": "^0.397.0",

@@ -1,9 +1,7 @@
 import express from 'express';
 import { addToCart, addToFavorites, getCart, removeFromCart, removeFromFavorites, deleteCartItem, buyCart, buyProduct, getPurchasedProducts } from '../controllers/cart.controller.js';
 import { verifyToken } from '../Middleware/auth.middleware.js';
-
 const router = express.Router();
-
 router.post('/add-to-cart', verifyToken, addToCart);
 router.post('/add-to-favorites', verifyToken, addToFavorites);
 router.post('/remove-from-cart', verifyToken, removeFromCart);
