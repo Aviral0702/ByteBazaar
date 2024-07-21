@@ -23,8 +23,8 @@ const Cart = () => {
                     credentials: 'include',
                 });
                 const data = await res.json();
-                if (data.userId) {
-                    setUserId(data.userId);
+                if (data.data.userId) {
+                    setUserId(data.data.userId);
                 }
             } catch (error) {
                 console.error('Error fetching signed-in user ID:', error);

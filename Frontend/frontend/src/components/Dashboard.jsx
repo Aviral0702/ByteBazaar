@@ -17,9 +17,11 @@ const Dashboard = () => {
     const fetchData = async () => {
       try {
         // Fetch user ID
-        const userIdResponse = await fetch('/api/auth/signedInUserId');
+        const userIdResponse = await fetch('/api/auth/signedinuserId');
         const userIdData = await userIdResponse.json();
-        const { userId } = userIdData;
+    
+        const { userId } = userIdData.userId;
+        console.log("Userid is :",userId)
         setUserId(userId);
 
         // Fetch user details (name and avatar)

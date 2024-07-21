@@ -29,7 +29,7 @@ import Navbar from './components/Navbar.jsx';
 import Testimonials from './components/Testimonials.jsx';
 import BuyNow from './pages/BuyNow.jsx';
 import ChatWidget from './components/ChatBot.jsx';
-
+import Dashboard from './components/Dashboard.jsx';
 export default function App() {
 
   return (

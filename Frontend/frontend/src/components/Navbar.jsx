@@ -9,7 +9,7 @@ const Navbar = () => {
   const [avatar, setAvatar] = useState("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png");
   const [cartItems, setCartItems] = useState(0);
   const [cartTotal, setCartTotal] = useState(0);
-
+  const [isUser,setIsUser] = useState(false);
   const handleSignOut = async () => {
     try {
       dispatch(signOutUserStart());
@@ -20,6 +20,7 @@ const Navbar = () => {
         return;
       }
       dispatch(deleteUserSuccess(data));
+      setIsUser(false);
       navigate('/sign-in');
     } catch (error) {
       console.error('Error signing out:', error);
@@ -34,13 +35,13 @@ const Navbar = () => {
         const userIdData = await userIdRes.json();
         if (userIdData.success === false) return;
 
-        const userRes = await fetch(`/api/user/${userIdData.userId}`);
+        const userRes = await fetch(`/api/user/${userIdData.data.userId}`);
         const userData = await userRes.json();
         if (userData.success !== false) {
           setAvatar(userData.avatar);
         }
 
-        const cartRes = await fetch(`/api/cart/getcart/${userIdData.userId}`);
+        const cartRes = await fetch(`/api/cart/getcart/${userIdData.data.userId}`);
         const cartData = await cartRes.json();
         console.log(cartData); // Debugging statement
         if (Array.isArray(cartData) && cartData.length > 0) {
@@ -52,6 +53,7 @@ const Navbar = () => {
           setCartItems(0);
           setCartTotal(0);
         }
+        setIsUser(true);
       } catch (error) {
         console.error('Error fetching user data:', error);
       }
@@ -71,9 +73,9 @@ const Navbar = () => {
           <Link to="/pricing">
             <button className="btn btn-outline btn-primary">Pricing</button>
           </Link>
-          <Link to="/sign-in">
+         {!isUser && <Link to="/sign-in">
             <button className="btn btn-outline btn-secondary">Login</button>
-          </Link>
+          </Link>}
           <Link to="/getstarted">
             <button className="btn btn-outline btn-secondary">Get Started</button>
           </Link>
@@ -98,7 +100,7 @@ const Navbar = () => {
               </div>
             </div>
           </div>
-          <div className="dropdown dropdown-end">
+          {isUser && <div className="dropdown dropdown-end">
             <div tabIndex={0} role="button" className="btn btn-ghost btn-circle avatar">
               <div className="w-10 rounded-full">
                 <img alt="User avatar" src={avatar} />
@@ -132,6 +134,7 @@ const Navbar = () => {
               </li>
             </ul>
           </div>
+        }
         </div>
         <div className="md:hidden flex items-center">
           <div className="dropdown dropdown-end">
