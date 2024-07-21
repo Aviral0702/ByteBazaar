@@ -87,66 +87,69 @@ const SideBar = ({ children }) => {
   };
 
   return (
-    <div className="main-container flex h-screen">
-      <motion.div
-        animate={{
-          width: isOpen ? '200px' : '45px',
-          transition: {
-            duration: 0.5,
-            type: 'spring',
-            damping: 10,
-          },
-        }}
-        className="sidebar bg-gray-800 text-white h-screen"
-      >
-        <div className="top_section flex items-center justify-between p-4">
-          <AnimatePresence>
-            {isOpen && (
-              <motion.h1
-                variants={showAnimation}
-                initial="hidden"
-                animate="show"
-                exit="hidden"
-                className="logo text-xl"
-              >
-                <NavLink to="/landingpage" className="text-white">
-                  ByteBazaar
-                </NavLink>
-              </motion.h1>
-            )}
-          </AnimatePresence>
-          <div className="bars cursor-pointer">
-            <FaBars onClick={toggle} className="text-2xl" />
-          </div>
-        </div>
-        <section className="routes">
-          {routes.map((route, index) => (
-            <NavLink
-              to={route.path}
-              key={index}
-              className="link flex items-center p-4 text-gray-400 hover:bg-gray-700 hover:text-white transition-all duration-300"
-              activeClassName="bg-gray-700 text-white"
+    <div className="main-container flex ">
+    <motion.div
+      initial={false}
+      animate={{
+        width: isOpen ? '200px' : '45px',
+        transition: {
+          duration: 0.5,
+          type: 'spring',
+          damping: 10,
+        },
+      }}
+      className="sidebar bg-gray-800 text-white overflow-y-auto"
+    >
+      <div className="top_section flex items-center justify-between p-4">
+        <AnimatePresence>
+          {isOpen && (
+            <motion.h1
+              variants={showAnimation}
+              initial="hidden"
+              animate="show"
+              exit="hidden"
+              className="logo text-xl"
             >
-              <div className="icon mr-4">{route.icon}</div>
-              <AnimatePresence>
-                {isOpen && (
-                  <motion.div
-                    variants={showAnimation}
-                    initial="hidden"
-                    animate="show"
-                    exit="hidden"
-                    className="link_text text-lg"
-                  >
-                    {route.name}
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </NavLink>
-          ))}
-        </section>
-      </motion.div>
-      <main className="flex-grow p-4">{children}</main>
-    </div>
+              <NavLink to="/landingpage" className="text-white">
+                ByteBazaar
+              </NavLink>
+            </motion.h1>
+          )}
+        </AnimatePresence>
+        <div className="bars cursor-pointer">
+          <FaBars onClick={toggle} className="text-2xl" />
+        </div>
+      </div>
+      <section className="routes">
+        {routes.map((route, index) => (
+          <NavLink
+            to={route.path}
+            key={index}
+            className="link flex items-center p-4 text-gray-400 hover:bg-gray-700 hover:text-white transition-all duration-300"
+            activeClassName="bg-gray-700 text-white"
+          >
+            <div className="icon mr-4">{route.icon}</div>
+            <AnimatePresence>
+              {isOpen && (
+                <motion.div
+                  variants={showAnimation}
+                  initial="hidden"
+                  animate="show"
+                  exit="hidden"
+                  className="link_text text-lg"
+                >
+                  {route.name}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </NavLink>
+        ))}
+      </section>
+    </motion.div>
+    <main className="flex-grow p-4 overflow-y-auto">
+      {children}
+    </main>
+  </div>  
   );
 };
 

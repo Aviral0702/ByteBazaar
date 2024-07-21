@@ -59,13 +59,13 @@ const Testimonials = () => {
     <div className="bg-white py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <h2 className="text-center text-3xl font-extrabold text-gray-900 sm:text-4xl">
-          Trusted by tens of thousands of small and mid-sized companies, startups, service providers, freelancers and agencies worldwide.
+          Trusted by tens of thousands of small and mid-sized companies, startups, service providers, freelancers, and agencies worldwide.
         </h2>
-        <div className="carousel carousel-center max-w-7xl p-8 space-x-4 bg-gray-300 rounded-box mx-auto mt-12">
+        <div className="carousel carousel-center max-w-7xl p-4 sm:p-8 space-x-4 bg-gray-300 rounded-box mx-auto mt-12">
           {testimonials.map((testimonial, index) => (
-            <div key={index} className="carousel-item p-8"> {/* Increased padding */}
-              <div className="bg-yellow-400 p-6 rounded-lg shadow-md w-96"> {/* Increased width */}
-                <div className="flex items-center space-x-4 mb-4">
+            <div key={index} className="carousel-item p-4 sm:p-8 md:p-12"> {/* Increased padding */}
+              <div className="bg-yellow-400 p-6 sm:p-8 rounded-lg shadow-md max-w-lg mx-auto"> {/* Increased width and centered */}
+                <div className="flex flex-col sm:flex-row items-center sm:items-start space-y-4 sm:space-y-0 sm:space-x-4 mb-4">
                   <img
                     src={`https://ui-avatars.com/api/?name=${testimonial.name}&size=128&background=random`}
                     alt={testimonial.name}
@@ -76,7 +76,7 @@ const Testimonials = () => {
                     <p className="text-sm">{testimonial.role}</p>
                   </div>
                 </div>
-                <p className="text-black font-bold mb-2">{testimonial.text}</p>
+                <p className="text-black font-bold mb-2 text-center sm:text-left">{testimonial.text}</p> {/* Centered text on small screens */}
               </div>
             </div>
           ))}
