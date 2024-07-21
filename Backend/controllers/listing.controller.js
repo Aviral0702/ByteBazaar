@@ -108,7 +108,6 @@ import { ApiError } from '../utils/ApiError.js';
 
 export const createListing = asyncHandler(async (req, res) => {
     const listing = await Listing.create(req.body);
-    console.log('Request Body:', req.body);
     return res.status(201).json(
         new ApiResponse(201, listing, "Listing created successfully")
     );
@@ -146,8 +145,6 @@ export const updateListing = asyncHandler(async (req, res) => {
     );
 });
 
-console.log("hey listing");
-
 export const getListing = asyncHandler(async (req, res) => {
     const listing = await Listing.findById(req.params.id);
     if (!listing) {
@@ -158,8 +155,6 @@ export const getListing = asyncHandler(async (req, res) => {
         new ApiResponse(200, listing, "Listing retrieved successfully")
     );
 });
-
-console.log("no listing");
 
 export const getListings = asyncHandler(async (req, res) => {
     console.log("hello");
@@ -215,23 +210,23 @@ export const getListings = asyncHandler(async (req, res) => {
     );
 });
 
-// export const getAllProducts = async(req, res, next) => {
-//     try {
-//         const products = await Listing.find({});
-//         res.status(200).json(products);
-//     } catch (error) {
-//         next(error);
-//     }
-// }
-// export const getProductByCategory = async(req, res, next) => {
-//     try {
-//         const category = req.params.category;
-//         const products = await Listing.find({ category });
-//         if (products.length === 0) {
-//             return res.status(404).json({ message: 'No products found in this category!' });
-//         }
-//         res.status(200).json(products);
-//     } catch (error) {
-//         next(error);
-//     }
-// };
+export const getAllProducts = async(req, res, next) => {
+    try {
+        const products = await Listing.find({});
+        res.status(200).json(products);
+    } catch (error) {
+        next(error);
+    }
+}
+export const getProductByCategory = async(req, res, next) => {
+    try {
+        const category = req.params.category;
+        const products = await Listing.find({ category });
+        if (products.length === 0) {
+            return res.status(404).json({ message: 'No products found in this category!' });
+        }
+        res.status(200).json(products);
+    } catch (error) {
+        next(error);
+    }
+};

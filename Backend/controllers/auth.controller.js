@@ -6,7 +6,7 @@ import { asyncHandler } from '../utils/asyncHandler.js';
 import { ApiError } from '../utils/ApiError.js'; // Assuming this exists
 
 export const signup = asyncHandler(async (req, res) => {
-    const { name, username, email, password, confirmPassword } = req.body;
+    const { name, username, email, password, confirmPassword,isSeller } = req.body;
 
     if (!password) {
         throw new ApiError(400, 'Password must not be empty');
@@ -17,7 +17,7 @@ export const signup = asyncHandler(async (req, res) => {
     }
 
     const hashedPassword = bcryptjs.hashSync(password, 10);
-    const newUser = new User({ name, username, email, password: hashedPassword });
+    const newUser = new User({ name, username, email,isSeller, password: hashedPassword });
 
     const savedUser = await newUser.save();
     
@@ -73,10 +73,14 @@ export const signedInUserId = asyncHandler(async (req, res) => {
     if (!user) {
         throw new ApiError(404, 'User not found');
     }
-
     return res.status(200).json(
-        new ApiResponse(200, { userId: userId }, 'User ID retrieved successfully')
-    );
+        new ApiResponse(
+            200,
+            { userId },
+            "UserId retrieved successfully"
+        )
+    )
+    
 });
 
 export const google = asyncHandler(async (req, res) => {

@@ -4,11 +4,9 @@ import dotenv from 'dotenv';
 import userRouter from './routes/user.route.js';
 import authRouter from './routes/auth.route.js';
 import listingRouter from './routes/listing.route.js';
-import productRouter from './routes/product.route.js';
 import marketPlaceRouter from './routes/marketplace.route.js'
 import cartRouter from './routes/cart.route.js'
 import cookieParser from 'cookie-parser';
-
 dotenv.config();
 
 mongoose
@@ -24,8 +22,10 @@ const app = express();
 // app.use(bodyParser.json());
 app.use(express.json());
 app.use(cookieParser());
-
-// Middleware to log requests
+app.use((req, res, next) => {
+    res.setHeader('Cross-Origin-Embedder-Policy', 'require-corp');
+    next();
+  });
 app.use((req, res, next) => {
     console.log(`Incoming request: ${req.method} ${req.url}`);
     console.log('Query Params:', req.query);
@@ -40,7 +40,6 @@ app.listen(8000, () => {
 app.use('/api/user', userRouter);
 app.use('/api/auth', authRouter);
 app.use('/api/listing', listingRouter);
-app.use('/api/products', productRouter);
 app.use('/api/cart', cartRouter);
 app.use('/api/marketplace',marketPlaceRouter)
 
