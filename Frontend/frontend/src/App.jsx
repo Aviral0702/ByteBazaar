@@ -23,38 +23,45 @@ import Cart from './components/Cart';
 import CreateServiceProvider from './components/CreateServiceProvider';
 import ProductList from './components/ProductList';
 import MyComponent from './components/MyComponent';
-
+import FAQ from './components/FAQ.jsx';
+import Graphs from './components/Graphs.jsx';
+import Navbar from './components/Navbar.jsx';
+import Testimonials from './components/Testimonials.jsx';
+import BuyNow from './pages/BuyNow.jsx';
+import ChatWidget from './components/ChatBot.jsx';
 
 export default function App() {
-  const categories = ["Saas", "Security", "Marketing"]; // Replace with your categories
 
   return (
     <BrowserRouter>
+    <ChatWidget/>
       <Routes>
         <Route path='/' element={<ImageIntro />} />
         <Route path='/landingpage' element={<LandingPage />} />
         <Route path='/productpage' element={<ProductPage />} />
         <Route path='/sign-in' element={<SignIn />} /> {/* Route to SignIn component */}
         <Route path='/sign-up' element={<SignUp />} /> {/* Route to SignUp component */}
-        {/* <Route path='/dashboard' element={<Dashboard/>}/> */}
         <Route path='/sidebar' element={<SideBar/>}/>
         <Route path='/search' element={<Search />} />
         <Route path='/about' element={<About/>}/>
-        <Route path='/settings' element={<SettingsPage/>}/>
-        <Route path='/orders' element={<Orders/>}/>
         <Route path='/pricing' element={<Pricing/>}/>
         <Route path='/getstarted' element={<GetStarted/>}/>
         <Route element={<PrivateRoute/>}>
           <Route path='/profile' element={<Profile />} />
+          <Route path='/createlisting' element={<CreateListingPage/>  } />
+          <Route path='/dashboard' element={<Dashboard/>}/>
+          <Route path='/settings' element={<SettingsPage/>}/>
+          <Route path='/orders' element={<Orders/>}/>
+          <Route path='/cart' element={<Cart/> } />
         </Route>
-        <Route path='/createlisting' element={<CreateListingPage/>  } />
         <Route path='/listing/:listingId' element={<Listing />} />
         <Route path='/itemcontainer' element={<ItemContainer/> } />
-        <Route path='/cart' element={<Cart/> } />
         <Route path='/serviceprovider' element={<CreateServiceProvider/>} />
         <Route path="/marketplace/:category" element={<ProductList/>} />
         <Route path="/mycomponent" element={<MyComponent/>} />
-        {/* <Route path="/cart" element={<Cart/>} /> */}
+        <Route path="/faq" element={<FAQ/>} />
+        <Route path="/testimonials" element={<Testimonials/>} />
+        <Route path="/buy" element={<BuyNow/>} />
 
       </Routes>
     </BrowserRouter>
