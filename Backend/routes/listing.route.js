@@ -1,7 +1,7 @@
 import express from 'express';
-import { createListing, deleteListing, updateListing, getListing, getListings } from '../controllers/listing.controller.js';
+import { createListing, deleteListing, updateListing, getListing, getListings, addComment, deleteComment } from '../controllers/listing.controller.js';
 import { verifyToken } from '../Middleware/auth.middleware.js';
-import { getAllProducts,getProductByCategory } from '../controllers/product.controller.js';
+import { getAllProducts, getProductByCategory } from '../controllers/product.controller.js';
 
 const router = express.Router();
 
@@ -15,7 +15,9 @@ console.log("new consolelog");
 router.get('/get', getListings);
 router.get("/getallproducts", getAllProducts);
 router.get("/:category", getProductByCategory);
-
+// Comment routes
+router.post('/:listingId/comment', verifyToken, addComment);
+router.delete('/:listingId/comment/:commentId', verifyToken, deleteComment);
 
 
 export default router;

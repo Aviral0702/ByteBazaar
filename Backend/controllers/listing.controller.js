@@ -105,8 +105,8 @@ import mongoose from 'mongoose';
 import { asyncHandler } from '../utils/asyncHandler.js';
 import { ApiResponse } from '../utils/ApiResponse.js';
 import { ApiError } from '../utils/ApiError.js';
-
-export const createListing = asyncHandler(async (req, res) => {
+import User from '../models/user.model.js';
+export const createListing = asyncHandler(async(req, res) => {
     const listing = await Listing.create(req.body);
     console.log('Request Body:', req.body);
     return res.status(201).json(
@@ -114,7 +114,7 @@ export const createListing = asyncHandler(async (req, res) => {
     );
 });
 
-export const deleteListing = asyncHandler(async (req, res) => {
+export const deleteListing = asyncHandler(async(req, res) => {
     const listing = await Listing.findById(req.params.id);
     if (!listing) {
         throw new ApiError(404, 'Listing not found!');
@@ -128,7 +128,7 @@ export const deleteListing = asyncHandler(async (req, res) => {
     );
 });
 
-export const updateListing = asyncHandler(async (req, res) => {
+export const updateListing = asyncHandler(async(req, res) => {
     const listing = await Listing.findById(req.params.id);
     if (!listing) {
         throw new ApiError(404, 'Listing not found!');
@@ -138,8 +138,7 @@ export const updateListing = asyncHandler(async (req, res) => {
     }
     const updatedListing = await Listing.findByIdAndUpdate(
         req.params.id,
-        req.body,
-        { new: true }
+        req.body, { new: true }
     );
     return res.status(200).json(
         new ApiResponse(200, updatedListing, "Listing updated successfully")
@@ -148,7 +147,7 @@ export const updateListing = asyncHandler(async (req, res) => {
 
 console.log("hey listing");
 
-export const getListing = asyncHandler(async (req, res) => {
+export const getListing = asyncHandler(async(req, res) => {
     const listing = await Listing.findById(req.params.id);
     if (!listing) {
         throw new ApiError(404, 'Listing not found!');
@@ -161,7 +160,7 @@ export const getListing = asyncHandler(async (req, res) => {
 
 console.log("no listing");
 
-export const getListings = asyncHandler(async (req, res) => {
+export const getListings = asyncHandler(async(req, res) => {
     console.log("hello");
     const limit = parseInt(req.query.limit) || 9;
     const startIndex = parseInt(req.query.startIndex) || 0;
@@ -215,23 +214,93 @@ export const getListings = asyncHandler(async (req, res) => {
     );
 });
 
-// export const getAllProducts = async(req, res, next) => {
-//     try {
-//         const products = await Listing.find({});
-//         res.status(200).json(products);
-//     } catch (error) {
-//         next(error);
-//     }
-// }
-// export const getProductByCategory = async(req, res, next) => {
-//     try {
-//         const category = req.params.category;
-//         const products = await Listing.find({ category });
-//         if (products.length === 0) {
-//             return res.status(404).json({ message: 'No products found in this category!' });
-//         }
-//         res.status(200).json(products);
-//     } catch (error) {
-//         next(error);
-//     }
-// };
+export const getAllProducts = async(req, res, next) => {
+    try {
+        const products = await Listing.find({});
+        res.status(200).json(products);
+    } catch (error) {
+        next(error);
+    }
+}
+export const getProductByCategory = async(req, res, next) => {
+    try {
+        const category = req.params.category;
+        const products = await Listing.find({ category });
+        if (products.length === 0) {
+            return res.status(404).json({ message: 'No products found in this category!' });
+        }
+        res.status(200).json(products);
+    } catch (error) {
+        next(error);
+    }
+};
+export const addComment = asyncHandler(async(req, res) => {
+    const { listingId } = req.params;
+    const { rating, comment } = req.body;
+    const userId = req.user.id;
+
+    const listing = await Listing.findById(listingId);
+
+    if (!listing) {
+        throw new ApiError(404, 'Listing not found!');
+    }
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+        throw new ApiError(404, 'User not found!');
+    }
+
+    const newComment = {
+        user: userId,
+        name: user.name,
+        rating,
+        comment
+    };
+
+    listing.reviews.push(newComment);
+
+    // Recalculate ratings and number of reviews
+    listing.numOfReviews = listing.reviews.length;
+    listing.ratings = listing.reviews.reduce((acc, item) => item.rating + acc, 0) / listing.reviews.length;
+
+    await listing.save();
+
+    return res.status(200).json(
+        new ApiResponse(200, listing, "Comment added successfully")
+    );
+});
+
+// Delete comment from a listing
+export const deleteComment = asyncHandler(async(req, res) => {
+    const { listingId, commentId } = req.params;
+    const userId = req.user.id;
+
+    const listing = await Listing.findById(listingId);
+
+    if (!listing) {
+        throw new ApiError(404, 'Listing not found!');
+    }
+
+    const comment = listing.reviews.id(commentId);
+
+    if (!comment) {
+        throw new ApiError(404, 'Comment not found!');
+    }
+
+    if (comment.user.toString() !== userId) {
+        throw new ApiError(401, 'You can only delete your own comments!');
+    }
+
+    comment.remove();
+
+    // Recalculate ratings and number of reviews
+    listing.numOfReviews = listing.reviews.length;
+    listing.ratings = listing.reviews.reduce((acc, item) => item.rating + acc, 0) / listing.reviews.length;
+
+    await listing.save();
+
+    return res.status(200).json(
+        new ApiResponse(200, listing, "Comment deleted successfully")
+    );
+});

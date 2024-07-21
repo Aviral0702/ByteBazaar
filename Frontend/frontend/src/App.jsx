@@ -29,6 +29,7 @@ import Navbar from './components/Navbar.jsx';
 import Testimonials from './components/Testimonials.jsx';
 import BuyNow from './pages/BuyNow.jsx';
 import ChatWidget from './components/ChatBot.jsx';
+import PrivacyPolicy from './pages/PrivacyPolicy.jsx';
 
 
 export default function App() {
@@ -62,6 +63,7 @@ export default function App() {
         <Route path="/mycomponent" element={<MyComponent/>} />
         {/* <Route path="/cart" element={<Cart/>} /> */}
         <Route path="/faq" element={<FAQ/>} />
+        <Route path="/privacy" element={<PrivacyPolicy/>} />
         {/* <Route path="/graphs" element={<Graphs/>} />
         <Route path="/navbar" element={<Navbar/>} /> */}
         <Route path="/testimonials" element={<Testimonials/>} />
