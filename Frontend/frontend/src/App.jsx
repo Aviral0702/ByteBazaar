@@ -10,7 +10,7 @@ import Dashboard from './components/Dashboard'
 import SideBar from './components/SideBar';
 import About from './pages/About';
 import Profile from './pages/Profile';
-import SettingsPage from './pages/SettingsPage';
+// import SettingsPage from './pages/SettingsPage';
 import Orders from './pages/Orders';
 import Pricing from './pages/Pricing';
 import GetStarted from './pages/GetStarted';
@@ -52,7 +52,7 @@ export default function App() {
           <Route path='/profile' element={<Profile />} />
           <Route path='/createlisting' element={<CreateListingPage/>  } />
           <Route path='/dashboard' element={<Dashboard/>}/>
-          <Route path='/settings' element={<SettingsPage/>}/>
+          {/* <Route path='/settings' element={<SettingsPage/>}/> */}
           <Route path='/orders' element={<Orders/>}/>
           <Route path='/cart' element={<Cart/> } />
         </Route>
