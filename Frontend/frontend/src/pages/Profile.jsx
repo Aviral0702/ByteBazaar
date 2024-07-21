@@ -16,7 +16,7 @@ import {
   deleteUserSuccess,
   signOutUserStart,
 } from '../redux/user/userSlice';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Sidebar from '../components/SideBar';
 
 export default function Profile() {
@@ -28,6 +28,7 @@ export default function Profile() {
   const [formData, setFormData] = useState({});
   const [updateSuccess, setUpdateSuccess] = useState(false);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (file) {
@@ -36,7 +37,7 @@ export default function Profile() {
   }, [file]);
 
   useEffect(() => {
-    // Set the initial formData with current user data
+    console.log(currentUser)
     if (currentUser) {
       setFormData({
         username: currentUser.username,
@@ -85,7 +86,6 @@ export default function Profile() {
         body: JSON.stringify(formData),
       });
       const data = await res.json();
-      console.log(data);
       if (res.status !== 200) {
         dispatch(updateUserFailure(data.message));
         return;
@@ -125,20 +125,20 @@ export default function Profile() {
         return;
       }
       dispatch(deleteUserSuccess(data));
+      navigate('/sign-in');
     } catch (error) {
       dispatch(deleteUserFailure(error.message));
     }
   };
 
-  console.log('Current User:', currentUser);
-  console.log('Form Data:', formData);
-
   return (
-    <div className='flex'>
+    <div className='flex flex-col h-screen md:flex-row'>
       <Sidebar />
       <div className='flex-1'>
         <div className='p-3 max-w-lg mx-auto'>
-          <h1 className='text-3xl font-semibold text-center my-7'>Profile</h1>
+          <h1 className='text-3xl font-semibold text-center my-7'>
+            Profile ({currentUser.isSeller ? 'Seller' : 'Buyer'})
+          </h1>
           <form onSubmit={handleSubmit} className='flex flex-col gap-4'>
             <input
               onChange={(e) => setFile(e.target.files[0])}
@@ -151,9 +151,9 @@ export default function Profile() {
               onClick={() => fileRef.current.click()}
               src={formData.avatar || currentUser.avatar}
               alt='profile'
-              className='rounded-full h-24 w-24 object-cover cursor-pointer self-center mt-2'
+              className='rounded-full h-24 w-24 object-cover cursor-pointer self-center mt-2 mx-auto md:mt-2'
             />
-            <p className='text-sm self-center'>
+            <p className='text-sm text-center'>
               {fileUploadError ? (
                 <span className='text-red-700'>
                   Error Image upload (image must be less than 2 mb)
@@ -195,29 +195,36 @@ export default function Profile() {
             >
               {loading ? 'Loading...' : 'Update'}
             </button>
-            <Link
-              className='bg-green-700 text-white p-3 rounded-lg uppercase text-center hover:opacity-95'
-              to={'/createlisting'}
-            >
-              Create Listing
-            </Link>
+            {
+              currentUser.isSeller && (
+                  <Link className='bg-green-700 text-white p-3 rounded-lg uppercase text-center hover:opacity-95' to={'/createlisting'}>
+                    Create Listing
+                  </Link>
+              )
+            }
+           
           </form>
-          <div className='flex justify-between mt-5'>
+          <div className='flex flex-col md:flex-row justify-between mt-5'>
             <span
               onClick={handleDeleteUser}
-              className='text-red-700 cursor-pointer'
+              className='text-red-700 cursor-pointer mb-2 md:mb-0 md:mr-2'
             >
               Delete account
             </span>
-            <span onClick={handleSignOut} className='text-red-700 cursor-pointer'>
+            <span
+              onClick={handleSignOut}
+              className='text-red-700 cursor-pointer mb-2 md:mb-0 md:ml-2'
+            >
               Sign out
             </span>
           </div>
 
-          <p className='text-red-700 mt-5'>{error ? error : ''}</p>
-          <p className='text-green-700 mt-5'>
-            {updateSuccess ? 'User is updated successfully!' : ''}
-          </p>
+          {error && <p className='text-red-700 mt-5'>{error}</p>}
+          {updateSuccess && (
+            <p className='text-green-700 mt-5 text-center'>
+              User is updated successfully!
+            </p>
+          )}
         </div>
       </div>
     </div>
